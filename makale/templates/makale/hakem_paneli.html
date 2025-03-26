@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head><title>Hakem Paneli</title></head>
+<body>
+    <h1>Hakem Paneli</h1>
+
+    <!-- 🔹 Hakem Seçim Formu -->
+    <form method="get">
+        <label>Hakem Seç:</label>
+        <select name="hakem" onchange="this.form.submit()">
+            <option value="">Seçiniz</option>
+            <option value="hakem1" {% if hakem == "hakem1" %}selected{% endif %}>Hakem 1</option>
+            <option value="hakem2" {% if hakem == "hakem2" %}selected{% endif %}>Hakem 2</option>
+            <option value="hakem3" {% if hakem == "hakem3" %}selected{% endif %}>Hakem 3</option>
+        </select>
+    </form>
+
+    <ul>
+        {% for makale in makaleler %}
+        <li>
+            {{ makale.takip_numarasi }} —
+        
+            {% if makale.anonim_dosya %}
+                <a href="{{ makale.anonim_dosya.url }}">PDF’i Gör</a> —
+            {% else %}
+                <span>Anonimleştirilmemiş</span> —
+            {% endif %}
+        
+            <a href="{% url 'makale_degerlendir' makale.id %}">Değerlendir</a>
+        </li>
+        {% empty %}
+            <li>Bu hakeme atanmış makale bulunamadı.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

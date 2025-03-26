@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head><title>Makale Durum Sorgulama</title></head>
+<body>
+    <h1>Makale Durum Sorgulama</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Sorgula</button>
+    </form>
+
+    {% if sonuc == "bulunamadi" %}
+        <p style="color:red;">Makale bulunamadı.</p>
+    {% elif sonuc %}
+        <hr>
+        <h3>Durum: {{ sonuc.durum }}</h3>
+        <p>Yükleme Tarihi: {{ sonuc.yuklenme_tarihi }}</p>
+        <p>Dosya: <a href="{{ sonuc.dosya.url }}">İndir</a></p>
+        {% if yorum %}
+            <h4>Hakem Yorumu:</h4>
+            <p>{{ yorum }}</p>
+        {% endif %}
+    {% endif %}
+
+    {% if sonuc and yorum %}
+    <p><strong>Hakem Yorumu:</strong> {{ yorum }}</p>
+
+    <form method="get" action="{% url 'revize_yukle' sonuc.id %}">
+        <button type="submit">Revize Dosya Yükle</button>
+    </form>
+    {% endif %}
+    
+    {% if sonuc.revize_dosya %}
+    <p><strong>Revize Edilmiş Makale:</strong> <a href="{{ sonuc.revize_dosya.url }}">İndir</a></p>
+    {% endif %}
+
+    {% if sonuc.final_pdf %}
+    <p><strong>Final Makale:</strong> <a href="{{ sonuc.final_pdf.url }}">İndir</a></p>
+    {% endif %}
+
+
+</body>
+</html>

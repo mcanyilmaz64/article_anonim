@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anonimleştirme Seçimi</title>
+</head>
+<body>
+    <h1>Anonimleştirilecek Bilgileri Seç</h1>
+    <form method="post" action="{% url 'anonimlestir_custom' makale.id %}">
+        {% csrf_token %}
+
+        <h3>Kişiler:</h3>
+        {% for item in persons %}
+            <label><input type="checkbox" name="secilenler" value="{{ item }}"> {{ item }}</label><br>
+        {% empty %}
+            <p>Hiç kişi bilgisi bulunamadı.</p>
+        {% endfor %}
+
+        <h3>Kurumlar:</h3>
+        {% for item in orgs %}
+            <label><input type="checkbox" name="secilenler" value="{{ item }}"> {{ item }}</label><br>
+        {% empty %}
+            <p>Hiç kurum bilgisi bulunamadı.</p>
+        {% endfor %}
+
+        <h3>E-posta adresleri:</h3>
+        {% for item in emails %}
+            <label><input type="checkbox" name="secilenler" value="{{ item }}"> {{ item }}</label><br>
+        {% empty %}
+            <p>Hiç e-posta bilgisi bulunamadı.</p>
+        {% endfor %}
+
+        
+
+        <br>
+        <button type="submit">Anonimleştir ve PDF Oluştur</button>
+    </form>
+</body>
+</html>

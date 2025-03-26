@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Makale Değerlendir</title></head>
+<body>
+    <h1>{{ makale.takip_numarasi }} - Değerlendirme</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Gönder</button>
+        hakem_yorumu_ekle_pdf(makale, deger.yorum)
+
+    </form>
+</body>
+</html>
