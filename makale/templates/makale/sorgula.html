@@ -1,44 +1,89 @@
-<!DOCTYPE html>
-<html>
-<head><title>Makale Durum Sorgulama</title></head>
-<body>
-    <h1>Makale Durum Sorgulama</h1>
+{% extends "makale/base.html" %}
+{% block title %}Makale Durum Sorgulama{% endblock %}
 
-    <form method="post">
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Makale Durum Sorgulama</h2>
+
+    <!-- Sorgulama Formu -->
+    <form method="post" class="card p-4 shadow-sm mb-4">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Sorgula</button>
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">Sorgula</button>
+        </div>
     </form>
 
+    <!-- Sonuçlar -->
     {% if sonuc == "bulunamadi" %}
-        <p style="color:red;">Makale bulunamadı.</p>
+        <div class="alert alert-danger">❌ Makale bulunamadı.</div>
+
     {% elif sonuc %}
-        <hr>
-        <h3>Durum: {{ sonuc.durum }}</h3>
-        <p>Yükleme Tarihi: {{ sonuc.yuklenme_tarihi }}</p>
-        <p>Dosya: <a href="{{ sonuc.dosya.url }}">İndir</a></p>
-        {% if yorum %}
-            <h4>Hakem Yorumu:</h4>
-            <p>{{ yorum }}</p>
-        {% endif %}
+        <div class="card p-4 shadow-sm mb-4">
+            <h5 class="mb-3"><strong>Durum:</strong> {{ sonuc.durum }}</h5>
+            <p><strong>Yükleme Tarihi:</strong> {{ sonuc.yuklenme_tarihi|date:"d.m.Y H:i" }}</p>
+            <p><strong>Dosya:</strong> <a href="{{ sonuc.dosya.url }}" class="btn btn-sm btn-outline-primary">İndir</a></p>
+
+            {% if yorum %}
+                <h6 class="mt-4">Hakem Yorumları:</h6>
+                <ul class="list-group">
+                    {% for y in yorum %}
+                        <li class="list-group-item">
+                            <strong>{{ y.hakem_adi }}:</strong> {{ y.yorum }}
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Henüz yorum yapılmamış.</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if sonuc.revize_dosya %}
+                <p class="mt-3"><strong>Revize Edilmiş Makale:</strong> 
+                    <a href="{{ sonuc.revize_dosya.url }}" class="btn btn-sm btn-warning">İndir</a>
+                </p>
+            {% endif %}
+
+            {% if sonuc.final_pdf %}
+                <p><strong>Final Makale:</strong> 
+                    <a href="{{ sonuc.final_pdf.url }}" class="btn btn-sm btn-success">İndir</a>
+                </p>
+            {% endif %}
+
+            {% if yorum %}
+                <form method="get" action="{% url 'revize_yukle' sonuc.id %}">
+                    <button type="submit" class="btn btn-outline-success mt-2">Revize Dosya Yükle</button>
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- Mesajlaşma Paneli -->
+        <div class="card p-4 shadow-sm">
+            <h5 class="mb-3">Mesajlaşma Paneli</h5>
+
+            {% if sonuc.mesaj %}
+                <div class="alert alert-secondary">
+                    <strong>
+                        {% if sonuc.mesaj_gonderen == "editor" %}
+                            📩 Editör Cevabı:
+                        {% else %}
+                            Gönderilen Mesaj:
+                        {% endif %}
+                    </strong> {{ sonuc.mesaj }}
+                </div>
+            {% else %}
+                <div class="text-muted mb-3">Henüz mesaj yok.</div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="eposta" value="{{ request.POST.eposta }}">
+                <input type="hidden" name="takip_numarasi" value="{{ request.POST.takip_numarasi }}">
+                <div class="mb-3">
+                    <textarea name="icerik" class="form-control" rows="4" placeholder="Mesaj yaz..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Mesaj Gönder</button>
+            </form>
+        </div>
     {% endif %}
-
-    {% if sonuc and yorum %}
-    <p><strong>Hakem Yorumu:</strong> {{ yorum }}</p>
-
-    <form method="get" action="{% url 'revize_yukle' sonuc.id %}">
-        <button type="submit">Revize Dosya Yükle</button>
-    </form>
-    {% endif %}
-    
-    {% if sonuc.revize_dosya %}
-    <p><strong>Revize Edilmiş Makale:</strong> <a href="{{ sonuc.revize_dosya.url }}">İndir</a></p>
-    {% endif %}
-
-    {% if sonuc.final_pdf %}
-    <p><strong>Final Makale:</strong> <a href="{{ sonuc.final_pdf.url }}">İndir</a></p>
-    {% endif %}
-
-
-</body>
-</html>
+</div>
+{% endblock %}

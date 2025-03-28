@@ -1,103 +1,118 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Editör Paneli</title>
-</head>
-<body>
-    <h1>Editör Paneli</h1>
+{% extends "makale/base.html" %}
+{% block title %}Editör Paneli{% endblock %}
 
-    <table border="1">
-        <thead>
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Editör Paneli</h2>
+    <div class="table-responsive">
+    <table class="table table-bordered w-100">
+        <thead class="table-dark text-center">
             <tr>
-                <th>Takip Numarası</th>
+                <th>Takip No</th>
                 <th>E-posta</th>
                 <th>Yükleme Tarihi</th>
                 <th>Dosya</th>
-                <th>İşlem</th>            
+                <th>İşlem</th>
                 <th>Mesaj</th>
                 <th>Sil</th>
-                <th>A.Kelimeler</th>
-                <th>Fianl Pdf</th>
+                <th>A. Kelimeler</th>
+                <th>Final PDF</th>
                 <th>Yorumlu PDF</th>
                 <th>Hakem Ata</th>
-
-                
-             
+                <th>Mesajlaşma</th>
             </tr>
-        </thead>
+        </thead>s
         <tbody>
             {% for makale in makaleler %}
             <tr>
                 <td>{{ makale.takip_numarasi }}</td>
                 <td>{{ makale.eposta }}</td>
-                <td>{{ makale.yuklenme_tarihi }}</td>
-                <td><a href="{{ makale.dosya.url }}">İndir</a></td>
+                <td>{{ makale.yuklenme_tarihi|date:"d.m.Y H:i" }}</td>
                 <td>
-                    <a href="{% url 'anonimlestirme_secim' makale.id %}">Anonimleştir</a>
+                    <a href="{{ makale.dosya.url }}" class="btn btn-sm btn-outline-primary">İndir</a>
+                    {% if makale.revize_dosya %}
+                        <div class="text-warning fw-bold">(Revize dosyasıdır)</div>
+                    {% endif %}
                 </td>
                 <td>
+                    <a href="{% url 'anonimlestirme_secim' makale.id %}" class="btn btn-sm btn-outline-secondary">Anonimleştir</a>
+                </td>
+                <td class="text-center">
                     {% if makale.mesaj %}
                         {{ makale.mesaj }}
                     {% else %}
                         <em>Mesaj yok</em>
                     {% endif %}
                 </td>
-               
                 <td>
-                    <a href="{% url 'makale_sil' makale.id %}" onclick="return confirm('Bu makaleyi silmek istediğinize emin misiniz?')">Sil</a>
+                    <a href="{% url 'makale_sil' makale.id %}" onclick="return confirm('Silmek istediğinize emin misiniz?')" class="btn btn-sm btn-danger">Sil</a>
                 </td>
-
-
                 <td>
                     {% if makale.keywords %}
-                        <strong>Anahtar Kelimeler:</strong> {{ makale.keywords }}
+                        {{ makale.keywords }}
                     {% else %}
-                        <em>Anahtar kelime bulunamadı.</em>
+                        <em>Bulunamadı</em>
                     {% endif %}
                 </td>
-               
-                    <td>
-                        {% if makale.yorumlu_pdf %}
-                            <form method="get" action="{% url 'final_olustur' makale.id %}">
-                                <button type="submit">Final PDF Oluştur</button>
-                            </form>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-
-                
-
                 <td>
                     {% if makale.yorumlu_pdf %}
-                        <a href="{{ makale.yorumlu_pdf.url }}">Yorumlu PDF</a>
+                        <form method="get" action="{% url 'final_olustur' makale.id %}">
+                            <button type="submit" class="btn btn-sm btn-success">Final PDF Gönder</button>
+                        </form>
                     {% else %}
-                        Henüz değerlendirme yapılmamış
+                        -
                     {% endif %}
                 </td>
-
                 <td>
-                <form method="post" action="{% url 'hakem_ata' makale.id %}">
-                    {% csrf_token %}
-        <select name="hakem">
-            <option value="hakem1" {% if makale.atandigi_hakem == "hakem1" %}selected{% endif %}>Hakem 1</option>
-            <option value="hakem2" {% if makale.atandigi_hakem == "hakem2" %}selected{% endif %}>Hakem 2</option>
-            <option value="hakem3" {% if makale.atandigi_hakem == "hakem3" %}selected{% endif %}>Hakem 3</option>
-            </select>
-        <button type="submit">Ata</button>
-                </form>
+                    {% if makale.yorumlu_pdf %}
+                        <span class="text-success fw-semibold">Değerlendirme Yapılmış</span>
+                    {% else %}
+                        <span class="text-muted">Henüz değerlendirme yok</span>
+                    {% endif %}
                 </td>
+                <td>
+                    <form method="post" action="{% url 'hakem_ata' makale.id %}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <select name="hakem" class="form-select form-select-sm">
+                                <option value="hakem1" {% if makale.atandigi_hakem == "hakem1" %}selected{% endif %}>Hakem 1</option>
+                                <option value="hakem2" {% if makale.atandigi_hakem == "hakem2" %}selected{% endif %}>Hakem 2</option>
+                                <option value="hakem3" {% if makale.atandigi_hakem == "hakem3" %}selected{% endif %}>Hakem 3</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">Ata</button>
+                        </div>
+                    </form>
+                </td>
+                <td>
+                    {% if makale.mesaj %}
+                        <p>
+                            <strong>
+                                {% if makale.mesaj_gonderen == 'editor' %}
+                                    Editör Cevabı:
+                                {% else %}
+                                    Yazar Mesajı:
+                                {% endif %}
+                            </strong> {{ makale.mesaj }}
+                        </p>
+                    {% endif %}
 
-                
-                
+                    <form method="post" action="{% url 'mesaj_cevapla' makale.id %}">
+                        {% csrf_token %}
+                        <textarea name="icerik" rows="2" class="form-control mb-2" placeholder="Cevap yaz..."></textarea>
+                        <button type="submit" class="btn btn-sm btn-outline-success">Cevapla</button>
+                    </form>
+                </td>
             </tr>
             {% empty %}
-            <tr><td colspan="6">Henüz yüklenmiş makale yok.</td></tr>
-            
-           
+            <tr>
+                <td colspan="12" class="text-center text-muted">Henüz yüklenmiş makale yok.</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+    </div>
+    <div class="text-end mt-3">
+        <a href="{% url 'log_kayitlari' %}" class="btn btn-dark">Log Kayıtları</a>
+    </div>
+</div>
+{% endblock %}

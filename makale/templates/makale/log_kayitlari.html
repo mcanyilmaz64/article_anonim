@@ -1,0 +1,37 @@
+{% extends "makale/base.html" %}
+{% block title %}Log Kayıtları{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">📜 Log Kayıtları</h2>
+
+        <table class="table table-bordered table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Takip No</th>
+                    <th>Editöre Geldi</th>
+                    <th>Hakeme Atandı</th>
+                    <th>Hakem Cevapladı</th>
+                    <th>Yayımlandı</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for makale in makaleler %}
+                <tr>
+                    <td class="text-break">{{ makale.takip_numarasi }}</td>
+                    <td>{{ makale.log_editore_gelis|date:"d.m.Y H:i" }}</td>
+                    <td>{{ makale.log_hakeme_atis|date:"d.m.Y H:i" }}</td>
+                    <td>{{ makale.log_hakem_cevap|date:"d.m.Y H:i" }}</td>
+                    <td>{{ makale.log_yayim|date:"d.m.Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-muted">Kayıt bulunamadı.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

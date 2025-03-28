@@ -1,17 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Makale Yükle</title>
-</head>
-<body>
-    <h1>Makale Yükle</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Yükle</button>
-    </form>
-    
-    
-    
-</body>
-</html>
+{% extends "makale/base.html" %}
+{% block title %}Makale Yükle{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">📄 Makale Yükle</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-success">Yükle</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

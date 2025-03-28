@@ -1,14 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head><title>Makale Değerlendir</title></head>
-<body>
-    <h1>{{ makale.takip_numarasi }} - Değerlendirme</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Gönder</button>
-        hakem_yorumu_ekle_pdf(makale, deger.yorum)
+{% extends "makale/base.html" %}
+{% block title %}Makale Değerlendir{% endblock %}
 
-    </form>
-</body>
-</html>
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">📝 Makale Değerlendirme</h2>
+        <h5 class="text-muted mb-4">Takip Numarası: <strong>{{ makale.takip_numarasi }}</strong></h5>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-primary">Gönder</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

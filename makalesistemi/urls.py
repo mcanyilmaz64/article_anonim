@@ -33,8 +33,13 @@ urlpatterns = [
     path('revize_yukle/<int:makale_id>/', views.revize_yukle, name='revize_yukle'),
     path('final_olustur/<int:makale_id>/', views.final_pdf_olustur_view, name='final_olustur'),
     path('hakem_ata/<int:makale_id>/', views.hakem_ata, name='hakem_ata'),
+    path('log-kayitlari/', views.log_kayitlari, name='log_kayitlari'),
+    path('mesajlar/<int:makale_id>/', views.mesajlar, name='mesajlar'),
+    path('revizeyi_hakeme_gonder/<int:makale_id>/', views.revizeyi_hakeme_gonder, name='revizeyi_hakeme_gonder'),
+    path("mesaj-cevapla/<int:makale_id>/", views.mesaj_cevapla, name="mesaj_cevapla"),
 
-
+    
+    
 
 
 ]

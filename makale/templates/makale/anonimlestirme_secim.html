@@ -1,38 +1,100 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Anonimleştirme Seçimi</title>
-</head>
-<body>
-    <h1>Anonimleştirilecek Bilgileri Seç</h1>
+{% extends "makale/base.html" %}
+{% block title %}Anonimleştirme Seçimi{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Anonimleştirilecek Bilgileri Seç</h2>
     <form method="post" action="{% url 'anonimlestir_custom' makale.id %}">
         {% csrf_token %}
 
-        <h3>Kişiler:</h3>
-        {% for item in persons %}
-            <label><input type="checkbox" name="secilenler" value="{{ item }}"> {{ item }}</label><br>
-        {% empty %}
-            <p>Hiç kişi bilgisi bulunamadı.</p>
-        {% endfor %}
+        <!-- Kişiler -->
+        <div class="mb-4">
+            <h4>Kişiler</h4>
+            <input type="text" class="form-control mb-2" id="filterPersons" placeholder="İsme göre filtrele">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="selectAllPersons">
+                <label class="form-check-label" for="selectAllPersons">Tümünü Seç</label>
+            </div>
+            <div id="personList" class="ms-3">
+                {% for item in persons %}
+                    <div class="form-check person-item">
+                        <input class="form-check-input person" type="checkbox" name="secilenler" value="{{ item }}">
+                        <label class="form-check-label">{{ item }}</label>
+                    </div>
+                {% empty %}
+                    <p>Hiç kişi bilgisi bulunamadı.</p>
+                {% endfor %}
+            </div>
+        </div>
 
-        <h3>Kurumlar:</h3>
-        {% for item in orgs %}
-            <label><input type="checkbox" name="secilenler" value="{{ item }}"> {{ item }}</label><br>
-        {% empty %}
-            <p>Hiç kurum bilgisi bulunamadı.</p>
-        {% endfor %}
+        <!-- Kurumlar -->
+        <div class="mb-4">
+            <h4>Kurumlar</h4>
+            <input type="text" class="form-control mb-2" id="filterOrgs" placeholder="Kurum adına göre filtrele">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="selectAllOrgs">
+                <label class="form-check-label" for="selectAllOrgs">Tümünü Seç</label>
+            </div>
+            <div id="orgList" class="ms-3">
+                {% for item in orgs %}
+                    <div class="form-check org-item">
+                        <input class="form-check-input org" type="checkbox" name="secilenler" value="{{ item }}">
+                        <label class="form-check-label">{{ item }}</label>
+                    </div>
+                {% empty %}
+                    <p>Hiç kurum bilgisi bulunamadı.</p>
+                {% endfor %}
+            </div>
+        </div>
 
-        <h3>E-posta adresleri:</h3>
-        {% for item in emails %}
-            <label><input type="checkbox" name="secilenler" value="{{ item }}"> {{ item }}</label><br>
-        {% empty %}
-            <p>Hiç e-posta bilgisi bulunamadı.</p>
-        {% endfor %}
+        <!-- E-postalar -->
+        <div class="mb-4">
+            <h4>E-posta Adresleri</h4>
+            <input type="text" class="form-control mb-2" id="filterEmails" placeholder="E-posta filtrele">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="selectAllEmails">
+                <label class="form-check-label" for="selectAllEmails">Tümünü Seç</label>
+            </div>
+            <div id="emailList" class="ms-3">
+                {% for item in emails %}
+                    <div class="form-check email-item">
+                        <input class="form-check-input email" type="checkbox" name="secilenler" value="{{ item }}">
+                        <label class="form-check-label">{{ item }}</label>
+                    </div>
+                {% empty %}
+                    <p>Hiç e-posta bilgisi bulunamadı.</p>
+                {% endfor %}
+            </div>
+        </div>
 
-        
-
-        <br>
-        <button type="submit">Anonimleştir ve PDF Oluştur</button>
+        <button type="submit" class="btn btn-primary">Anonimleştir ve PDF Oluştur</button>
     </form>
-</body>
-</html>
+</div>
+
+<!-- JavaScript -->
+<script>
+    function setupFilter(inputId, itemClass) {
+        document.getElementById(inputId).addEventListener('keyup', function () {
+            const searchText = this.value.toLowerCase();
+            document.querySelectorAll('.' + itemClass).forEach(label => {
+                const labelText = label.textContent.toLowerCase();
+                label.style.display = labelText.includes(searchText) ? 'block' : 'none';
+            });
+        });
+    }
+
+    document.getElementById('selectAllPersons').addEventListener('change', function () {
+        document.querySelectorAll('.person').forEach(cb => cb.checked = this.checked);
+    });
+    document.getElementById('selectAllOrgs').addEventListener('change', function () {
+        document.querySelectorAll('.org').forEach(cb => cb.checked = this.checked);
+    });
+    document.getElementById('selectAllEmails').addEventListener('change', function () {
+        document.querySelectorAll('.email').forEach(cb => cb.checked = this.checked);
+    });
+
+    setupFilter('filterPersons', 'person-item');
+    setupFilter('filterOrgs', 'org-item');
+    setupFilter('filterEmails', 'email-item');
+</script>
+{% endblock %}

@@ -1,7 +1,19 @@
-<h2>Revize Makale Yükle</h2>
+{% extends "makale/base.html" %}
+{% block title %}Revize Dosya Yükle{% endblock %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Yükle</button>
-</form>
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">📤 Revize Makale Yükle</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-primary">Yükle</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

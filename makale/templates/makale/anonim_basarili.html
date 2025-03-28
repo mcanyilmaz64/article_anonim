@@ -1,9 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head><title>Anonimleştirme Başarılı</title></head>
-<body>
-    <h1>PDF başarıyla anonimleştirildi.</h1>
-    <p><a href="{{ makale.anonim_dosya.url }}">Anonim PDF’i Görüntüle</a></p>
-    <p><a href="/editor/">Editör Paneline Dön</a></p>
-</body>
-</html>
+{% extends "makale/base.html" %}
+
+{% block title %}Anonimleştirme Başarılı{% endblock %}
+
+{% block content %}
+    <div class="text-center mt-5">
+        <h1 class="text-success">PDF başarıyla anonimleştirildi.</h1>
+        <p><a href="{{ makale.anonim_dosya.url }}" class="btn btn-primary mt-3">Anonim PDF’i Görüntüle</a></p>
+        <p><a href="/editor/" class="btn btn-secondary">Editör Paneline Dön</a></p>
+    </div>
+{% endblock %}

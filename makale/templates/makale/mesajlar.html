@@ -1,0 +1,15 @@
+<h2>{{ makale.takip_numarasi }} - Mesajlaşma</h2>
+
+<div style="border:1px solid #ccc; padding:10px;">
+    {% for mesaj in mesajlar %}
+        <p><strong>{{ mesaj.gonderen|title }}:</strong> {{ mesaj.icerik }} <em>({{ mesaj.tarih }})</em></p>
+    {% empty %}
+        <p>Henüz mesaj yok.</p>
+    {% endfor %}
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <textarea name="icerik" rows="4" cols="50" placeholder="Mesaj yaz..."></textarea><br>
+    <button type="submit">Gönder</button>
+</form>
