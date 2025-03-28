@@ -37,6 +37,9 @@ urlpatterns = [
     path('mesajlar/<int:makale_id>/', views.mesajlar, name='mesajlar'),
     path('revizeyi_hakeme_gonder/<int:makale_id>/', views.revizeyi_hakeme_gonder, name='revizeyi_hakeme_gonder'),
     path("mesaj-cevapla/<int:makale_id>/", views.mesaj_cevapla, name="mesaj_cevapla"),
+    path('editor/alan/<int:makale_id>/', views.alan_ata, name='alan_ata'),
+
+
 
     
     

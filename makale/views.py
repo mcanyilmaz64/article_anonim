@@ -222,7 +222,6 @@ def makale_sil(request, makale_id):
     return redirect('editor_paneli')
 
 def extract_keywords_from_pdf(pdf_path):
-
     doc = fitz.open(pdf_path)
     text = ""
 
@@ -231,22 +230,24 @@ def extract_keywords_from_pdf(pdf_path):
 
     doc.close()
 
+    text = text.replace("\n", " ")  # çok satırlı yazımı önler
+
+    # Olası başlık varyasyonları
     patterns = [
-        r"(?i)(keywords[\s\-_:]*)\s*(.*)",
-        r"(?i)(keywords-component[\s\-_:]*)\s*(.*)",
-        r"(?i)(index terms[\s\-_:]*)\s*(.*)",
+        r"(?:Keywords|Key words|Index Terms)[\s\-–—_:]*([\w\s,;]+)",  # genel eşleşme
     ]
 
     for pattern in patterns:
-        match = re.search(pattern, text)
-        if match:
-            # Satırın tamamı eşleşmiş olabilir, yalnızca son kısmı al
-            full = match.group(0)
-            parts = re.split(r"[:-]", full, 1)
-            if len(parts) > 1:
-                return parts[1].strip()
+        matches = re.findall(pattern, text, re.IGNORECASE)
+        if matches:
+            # İlk anlamlı eşleşmeyi döndür
+            for match in matches:
+                cleaned = match.strip()
+                if len(cleaned) > 3:
+                    return cleaned
 
     return None
+
 
 def hakem_yorumu_ekle_pdf(makale, yorum):
   
@@ -358,6 +359,15 @@ def mesaj_cevapla(request, makale_id):
             makale.mesaj_gonderen = "editor"
             makale.save()
     return redirect("editor_paneli")
+
+def alan_ata(request, makale_id):
+    makale = get_object_or_404(Makale, id=makale_id)
+
+    if request.method == 'POST':
+        makale.alan = request.POST.get('alan')
+        makale.save()
+    
+    return redirect('editor_paneli')
 
 # yardımcı fonksiyonlar
 #/////////////////////////////////////////////////////////////

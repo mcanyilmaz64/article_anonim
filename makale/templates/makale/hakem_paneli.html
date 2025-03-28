@@ -11,9 +11,10 @@
             <label for="hakem" class="form-label">Hakem Seç:</label>
             <select name="hakem" id="hakem" class="form-select" onchange="this.form.submit()">
                 <option value="">Seçiniz</option>
-                <option value="hakem1" {% if hakem == "hakem1" %}selected{% endif %}>Hakem 1</option>
-                <option value="hakem2" {% if hakem == "hakem2" %}selected{% endif %}>Hakem 2</option>
-                <option value="hakem3" {% if hakem == "hakem3" %}selected{% endif %}>Hakem 3</option>
+                <option value="hakem1" {% if makale.atandigi_hakem == "hakem1" %}selected{% endif %}>Yapay Zeka Hakemi</option>
+                <option value="hakem2" {% if makale.atandigi_hakem == "hakem2" %}selected{% endif %}>Sinyal İşleme Hakemi</option>
+                <option value="hakem3" {% if makale.atandigi_hakem == "hakem3" %}selected{% endif %}>Ağ Güvenliği Hakemi</option>
+
             </select>
         </form>
 

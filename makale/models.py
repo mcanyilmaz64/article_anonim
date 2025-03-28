@@ -6,7 +6,11 @@ HAKEMLER = [
         ('hakem2', 'Hakem 2'),
         ('hakem3', 'Hakem 3'),
     ]
-
+ALAN_SECENEKLERI = [
+    ('YZ', 'Yapay Zeka'),
+    ('SI', 'Sinyal İşleme'),
+    ('AG', 'Ağ Güvenliği'),
+]
 class Makale(models.Model):
     takip_numarasi = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     eposta = models.EmailField()
@@ -31,6 +35,8 @@ class Makale(models.Model):
     pdf_hash = models.CharField(max_length=64, blank=True, null=True)
     yorumlu_pdf_hash = models.CharField(max_length=64, blank=True, null=True)
     final_pdf_hash = models.CharField(max_length=64, blank=True, null=True)
+    alan = models.CharField(max_length=100, blank=True, null=True)
+
 
 
 
